@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página con Selector de Idiomas</title>
+    <style>
+        /* Estilos del fondo */
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('fondo.PNG'); /* Fondo de la página */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Selector de idiomas */
+        .language-dropdown {
+            position: absolute;
+            top: 10px;
+            left: 90%;
+            background-color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .language-dropdown span {
+            margin-right: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .language-dropdown img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 40px;
+            left: 90%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            font-size: 14px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Estilo del logo principal */
+        #logo {
+            width: 300px; /* Ajusta el tamaño del logo */
+            height: auto; /* Mantén la proporción */
+            margin-bottom: 20px; /* Espacio debajo del logo */
+        }
+
+        /* Contenedor del formulario */
+        .form-container {
+            text-align: center;
+            background: white; /* Fondo blanco */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(41, 41, 41, 0.3);
+            width: 90%;
+            max-width: 270px;
+        }
+
+        .form-container input[type="text"] {
+            padding: 12px; /* Espaciado interno */
+            font-size: 16px; /* Tamaño de fuente */
+            border: 2px solid #ccc; /* Borde claro */
+            border-radius: 5px; /* Bordes redondeados */
+            width: 90%; /* Abarca todo el ancho */
+            text-align: center; /* Centra el texto */
+            outline: none; /* Sin contorno al hacer clic */
+            color: #000000; /* Color del texto */
+            font-weight: bold;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Efecto interno */
+            transition: border-color 0.3s ease; /* Animación suave al cambiar el borde */
+        }
+
+        .form-container input[type="text"]::placeholder {
+            color: #b0b0b0; /* Color del texto placeholder */
+            font-weight: normal;
+        }
+
+        input.error {
+            border: 3px solid red !important; /* Reborde rojo para el error */
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            display: none; /* Ocultar mensaje por defecto */
+        }
+
+        /* Botón estilo negro y 3D */
+        button {
+            background-color: rgba(0, 0, 0, 0.925); /* Fondo negro */
+            color: white; /* Texto blanco */
+            padding: 15px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%; /* Abarca todo el ancho del formulario */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para efecto 3D */
+            transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+            margin-top: 5px; /* Separación con el mensaje de error */
+        }
+
+        button:hover {
+            background-color: #333; /* Más oscuro al pasar el ratón */
+        }
+
+        button:active {
+            transform: translateY(3px); /* Baja ligeramente */
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2); /* Menor sombra */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Selector de idiomas -->
+    <div class="language-dropdown" id="languageSelector">
+        <span>ES</span>
+        <img src="mundo.png" alt="Icono de globo">
+    </div>
+
+    <div class="dropdown-content" id="dropdownContent">
+        <a href="#" onclick="cambiarIdioma('EN')">Inglés</a>
+        <a href="#" onclick="cambiarIdioma('ES')">Español</a>
+        <a href="#" onclick="cambiarIdioma('FR')">Francés</a>
+        <a href="#" onclick="cambiarIdioma('DE')">Alemán</a>
+    </div>
+
+    <!-- Imagen del logo -->
+    <img id="logo" src="logo.png" alt="Logo de Kahoot">
+
+    <!-- Formulario -->
+    <div class="form-container">
+        <input type="text" id="inputNombre" placeholder="Escriba aquí su nombre">
+        <p class="error-message" id="errorMensaje">Introduzca un nombre</p>
+        <button id="miBoton">Continuar</button>
+    </div>
+
+    <script>
+        const traducciones = {
+            ES: {
+                inputPlaceholder: "Escriba aquí su nombre",
+                buttonText: "Continuar",
+                errorMessage: "Introduzca un nombre"
+            },
+            EN: {
+                inputPlaceholder: "Enter your name here",
+                buttonText: "Continue",
+                errorMessage: "Please enter a name"
+            },
+            FR: {
+                inputPlaceholder: "Entrez votre nom ici",
+                buttonText: "Continuer",
+                errorMessage: "Veuillez entrer un nom"
+            },
+            DE: {
+                inputPlaceholder: "Geben Sie hier Ihren Namen ein",
+                buttonText: "Fortfahren",
+                errorMessage: "Bitte geben Sie einen Namen ein"
+            }
+        };
+
+        function cambiarIdioma(idioma) {
+            document.querySelector(".language-dropdown span").textContent = idioma;
+            document.getElementById("inputNombre").placeholder = traducciones[idioma].inputPlaceholder;
+            document.getElementById("miBoton").textContent = traducciones[idioma].buttonText;
+            document.getElementById("errorMensaje").textContent = traducciones[idioma].errorMessage;
+        }
+
+        document.getElementById("languageSelector").addEventListener("click", () => {
+            const dropdownContent = document.getElementById("dropdownContent");
+            dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+        });
+
+        document.getElementById("miBoton").addEventListener("click", () => {
+            const inputNombre = document.getElementById("inputNombre");
+            const errorMensaje = document.getElementById("errorMensaje");
+
+            if (inputNombre.value.trim() === "") {
+                inputNombre.classList.add("error"); // Añadir borde rojo si está vacío
+                errorMensaje.style.display = "block"; // Mostrar mensaje de error
+            } else {
+                inputNombre.classList.remove("error"); // Quitar borde rojo si se llena
+                errorMensaje.style.display = "none"; // Ocultar mensaje de error
+                window.location.href = "https://lighthearted-caramel-5f43aa.netlify.app/";
+            }
+        });
+    </script>
+</body>
+</html>
